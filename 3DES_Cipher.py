@@ -257,33 +257,56 @@ def DES_decrypt(ct, key):
     return plain_text                                            #return the final plain text
 
 
-'''pt = "1100110000110100100000111010000010010101001101111000000001000010" #CC3483A095378042
-key= "0111001101101100101101010010010111000101101100011100001011001100" #736CB525C5B1C2CC
-print(DES_encrypt(pt, key))
-ct = DES_encrypt(pt, key)
-print(DES_decrypt(ct, key))'''
+'''pt = "1000101100100011100111101111110001011111000101010000011110001000" #8B239EFC5F150788
+k1 = "0011000011011001100010011001110010111011010011011110000000110001" #30D9899CBB4DE031
+k2 = "1100111100000000001000111010101111010010110111111110011110010010" #CF0023ABD2DFE792
+k3 = "0101100111111011011110111111110010100111100110011100000010111010" #59FB7BFCA799C0BA
+
+t = DES_encrypt(pt, k1)
+t1 = DES_encrypt(t, k2)
+ct = DES_encrypt(t1, k3)
+print(ct)
+
+t = DES_decrypt(ct, k3)
+t1 = DES_decrypt(t, k2)
+pt = DES_decrypt(t1, k1)
+print(pt)'''
 
 while 1:
-    print("Main Menu: \n1. DES Encrypt 2. DES Decrypt 3. Exit")
+    print("Main Menu: \n1. 3DES Encrypt 2. 3DES Decrypt 3. Exit")
     choice = int(input("Enter your choice: "))
     if choice == 1:
         pt = bin(int(("0x" + input("Enter 64 bit plain text in hex: ")), 16))[2:]
-        key = bin(int(("0x" + input("Enter 64 bit key in hex: ")), 16))[2:]
+        key1 = bin(int(("0x" + input("Enter first 64 bit key in hex: ")), 16))[2:]
+        key2 = bin(int(("0x" + input("Enter second 64 bit key in hex: ")), 16))[2:]
+        key3 = bin(int(("0x" + input("Enter third 64 bit key in hex: ")), 16))[2:]
 
         pt = "0"*(64-len(pt)) + pt
-        key = "0"*(64-len(key)) + key
-
-        ct = hex(int(("0b" + DES_encrypt(pt, key)), 2))[2:]
+        key1 = "0"*(64-len(key1)) + key1
+        key2 = "0"*(64-len(key2)) + key2
+        key3 = "0"*(64-len(key3)) + key3
+        
+        t1 = DES_encrypt(pt, key1)
+        t2 = DES_encrypt(t1, key2)
+        ct = hex(int(("0b" + DES_encrypt(t2, key3)), 2))[2:]
         print("Cipher text:", ct)
     elif choice == 2:
         ct = bin(int(("0x" + input("Enter 64 bit cipher text in hex: ")), 16))[2:]
-        key = bin(int(("0x" + input("Enter 64 bit key in hex: ")), 16))[2:]
+        key1 = bin(int(("0x" + input("Enter first 64 bit key in hex: ")), 16))[2:]
+        key2 = bin(int(("0x" + input("Enter second 64 bit key in hex: ")), 16))[2:]
+        key3 = bin(int(("0x" + input("Enter third 64 bit key in hex: ")), 16))[2:]
 
         ct = "0"*(64-len(ct)) + ct
-        key = "0"*(64-len(key)) + key
+        key1 = "0"*(64-len(key1)) + key1
+        key2 = "0"*(64-len(key2)) + key2
+        key3 = "0"*(64-len(key3)) + key3
 
-        pt = hex(int(("0b" + DES_decrypt(ct, key)), 2))[2:]
+        t1 = DES_decrypt(ct, key3)
+        t2 = DES_decrypt(t1, key2)
+        pt = hex(int(("0b" + DES_decrypt(t2, key1)), 2))[2:]
         print("Plain text:", pt)
     else: 
         exit()
+
+
 
